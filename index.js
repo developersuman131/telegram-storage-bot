@@ -1,15 +1,22 @@
+// index.js
 import express from "express";
 import multer from "multer";
 import cors from "cors";
-app.use(cors()); // upload se pehle add karo
 import TelegramBot from "node-telegram-bot-api";
 import path from "path";
 import { fileURLToPath } from "url";
 
+// File & dir setup
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Express app
 const app = express();
+
+// Enable CORS so other websites can POST files
+app.use(cors());
+
+// Multer setup (memory storage)
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Telegram Bot
@@ -27,7 +34,12 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     if (isImage) {
       await bot.sendPhoto(process.env.CHANNEL_ID, req.file.buffer);
     } else {
-      await bot.sendDocument(process.env.CHANNEL_ID, req.file.buffer, {}, { filename: req.file.originalname });
+      await bot.sendDocument(
+        process.env.CHANNEL_ID,
+        req.file.buffer,
+        {},
+        { filename: req.file.originalname }
+      );
     }
     res.json({ success: true });
   } catch (err) {
