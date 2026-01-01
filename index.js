@@ -1,5 +1,7 @@
 import express from "express";
 import multer from "multer";
+import cors from "cors";
+app.use(cors()); // upload se pehle add karo
 import TelegramBot from "node-telegram-bot-api";
 import path from "path";
 import { fileURLToPath } from "url";
